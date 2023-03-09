@@ -7,7 +7,6 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
-use Hashbangcode\SitemapChecker\Parser\UrlListParser;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
 use PHPUnit\Framework\TestCase;
 

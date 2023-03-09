@@ -4,8 +4,7 @@ namespace Hashbangcode\SitemapChecker;
 
 interface UrlCollectionInterface
 {
+    public function add(UrlInterface $link): void;
 
-  public function add(UrlInterface $link):void;
-
-  public function delete(int $index):void;
+    public function delete(int $index): void;
 }

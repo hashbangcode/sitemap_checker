@@ -9,21 +9,21 @@ use PHPUnit\Framework\TestCase;
 class UrlCollectionTest extends TestCase
 {
 
-  public function testLinkAddedToLinkCollectionIncrementsCountAndIsIterable()
+  public function testUrlAddedToUrlCollectionIncrementsCountAndIsIterable()
   {
-    $linkCollection = new UrlCollection();
+    $urlCollection = new UrlCollection();
 
-    $linkCollection->add(new Url('https://www.example.com/'));
-    $this->assertEquals($linkCollection->count(), 1);
+    $urlCollection->add(new Url('https://www.example.com/'));
+    $this->assertEquals($urlCollection->count(), 1);
 
-    $linkCollection->add(new Url('https://www.example.com/inner-path'));
-    $this->assertEquals($linkCollection->count(), 2);
+    $urlCollection->add(new Url('https://www.example.com/inner-path'));
+    $this->assertEquals($urlCollection->count(), 2);
 
-    $this->assertEquals('/', $linkCollection->current()->getPath());
-    $linkCollection->next();
-    $this->assertEquals('/inner-path', $linkCollection->current()->getPath());
+    $this->assertEquals('/', $urlCollection->current()->getPath());
+    $urlCollection->next();
+    $this->assertEquals('/inner-path', $urlCollection->current()->getPath());
 
-    $linkCollection->delete(1);
-    $this->assertEquals($linkCollection->count(), 1);
+    $urlCollection->delete(1);
+    $this->assertEquals($urlCollection->count(), 1);
   }
 }
