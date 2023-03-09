@@ -49,3 +49,7 @@ atlassian-ide-plugin.xml
 
 # Composer files
 vendor
+
+# Other Package Files
+.build
+.phpunit.result.cache
