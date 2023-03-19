@@ -2,10 +2,7 @@
 
 namespace Hashbangcode\SitemapChecker;
 
-/**
- * @implements \Iterator<int, UrlInterface>
- */
-class UrlCollection implements UrlCollectionInterface, \Iterator, \Countable
+class UrlCollection implements UrlCollectionInterface
 {
     /**
      * @var UrlInterface[]
@@ -53,4 +50,31 @@ class UrlCollection implements UrlCollectionInterface, \Iterator, \Countable
     {
         reset($this->urls);
     }
+
+    public function find(int $id) : UrlInterface|false
+    {
+        if (isset($this->urls[$id])) {
+            return $this->urls[$id];
+        }
+        return false;
+    }
+
+    /**
+     * @param int<1, max> $chunkLength
+     *
+     * @return UrlCollectionInterface[]
+     */
+    public function chunk(int $chunkLength) : array
+    {
+        $collections = [];
+        foreach (array_chunk($this->urls, $chunkLength) as $urlCollectionChunk) {
+            $urlCollection = new UrlCollection();
+            foreach ($urlCollectionChunk as $url) {
+                $urlCollection->add($url);
+            }
+            $collections[] = $urlCollection;
+        }
+        return $collections;
+    }
+
 }

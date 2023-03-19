@@ -15,38 +15,40 @@ class Result implements ResultInterface
     /**
      * The Url object used in the test.
      *
-     * @var Url
+     * @var UrlInterface
      */
-    protected Url $url;
+    protected UrlInterface $url;
 
     /**
      * The response code.
      *
-     * @var string
+     * @var int
      */
-    protected string $responseCode;
+    protected int $responseCode;
 
     /**
      * Creates a Result object.
      *
-     * @param Url $url
+     * @param UrlInterface $url
      *   The Url object.
      */
-    public function __construct(UrlInterface $url)
+    public function __construct(UrlInterface $url = NULL)
     {
-        $this->url = $url;
+        if ($url !== NULL) {
+            $this->url = $url;
+        }
     }
 
     /**
      * Set the Url object.
      *
-     * @param \Hashbangcode\SitemapChecker\Url $url
+     * @param \Hashbangcode\SitemapChecker\UrlInterface $url
      *   The url object.
      *
      * @return ResultInterface
      *   The current object.
      */
-    public function setUrl($url): ResultInterface
+    public function setUrl(UrlInterface $url): ResultInterface
     {
         $this->url = $url;
         return $this;
@@ -55,13 +57,13 @@ class Result implements ResultInterface
     /**
      * Set the response code.
      *
-     * @param string $responseCode
+     * @param int $responseCode
      *   The response code.
      *
      * @return ResultInterface
      *   The current object.
      */
-    public function setResponseCode(string $responseCode): ResultInterface
+    public function setResponseCode(int $responseCode): ResultInterface
     {
         $this->responseCode = $responseCode;
         return $this;
@@ -70,10 +72,10 @@ class Result implements ResultInterface
     /**
      * Get the response code.
      *
-     * @return string
+     * @return int
      *   The response code.
      */
-    public function getResponseCode(): string
+    public function getResponseCode(): int
     {
         return $this->responseCode;
     }
@@ -81,10 +83,10 @@ class Result implements ResultInterface
     /**
      * Get the Url object.
      *
-     * @return Url
+     * @return UrlInterface
      *   The Url object.
      */
-    public function getUrl(): Url
+    public function getUrl(): UrlInterface
     {
         return $this->url;
     }

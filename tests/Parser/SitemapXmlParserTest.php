@@ -27,4 +27,5 @@ class SitemapXmlParserTest extends TestCase
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/inner-link', $list->current()->getPath());
   }
+
 }

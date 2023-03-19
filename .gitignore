@@ -53,3 +53,4 @@ vendor
 # Other Package Files
 .build
 .phpunit.result.cache
+var/

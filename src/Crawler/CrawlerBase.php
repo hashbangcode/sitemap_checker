@@ -5,6 +5,7 @@ namespace Hashbangcode\SitemapChecker\Crawler;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\Result\ResultCollectionInterface;
 use Hashbangcode\SitemapChecker\UrlCollection;
+use Hashbangcode\SitemapChecker\UrlCollectionInterface;
 
 abstract class CrawlerBase implements CrawlerInterface
 {
@@ -21,7 +22,7 @@ abstract class CrawlerBase implements CrawlerInterface
         return $this->engine;
     }
 
-    public function crawl(UrlCollection $urlCollection): ResultCollectionInterface
+    public function crawl(UrlCollectionInterface $urlCollection): ResultCollectionInterface
     {
         $resultCollection = new ResultCollection();
         foreach ($urlCollection as $url) {

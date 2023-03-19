@@ -16,4 +16,13 @@ class ResultTest extends TestCase {
     $this->assertEquals('200', $result->getResponseCode());
   }
 
+  public function testSettingOfResultUrl() {
+      $url = new Url('https://www.example.com');
+      $result = new Result();
+      $result->setUrl($url);
+      $result->setResponseCode(200);
+
+      $this->assertEquals('200', $result->getResponseCode());
+  }
+
 }

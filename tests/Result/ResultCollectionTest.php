@@ -21,9 +21,16 @@ class ResultCollectionTest extends TestCase
     $resultCollection->add(new Result(new Url('https://www.example.com/inner-path')));
     $this->assertEquals($resultCollection->count(), 2);
 
+      $this->assertEquals(0, $resultCollection->key());
     $this->assertEquals('/', $resultCollection->current()->getUrl()->getPath());
     $resultCollection->next();
+      $this->assertEquals(1, $resultCollection->key());
     $this->assertEquals('/inner-path', $resultCollection->current()->getUrl()->getPath());
+
+      foreach ($resultCollection as $id => $result) {
+          $this->assertInstanceOf(Result::class, $result);
+          $this->assertEquals($id, $resultCollection->key());
+      }
 
     $resultCollection->delete(1);
     $this->assertEquals($resultCollection->count(), 1);

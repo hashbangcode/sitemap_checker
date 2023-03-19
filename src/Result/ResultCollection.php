@@ -4,10 +4,8 @@ namespace Hashbangcode\SitemapChecker\Result;
 
 use Hashbangcode\SitemapChecker\UrlInterface;
 
-/**
- * @implements \Iterator<int, UrlInterface>
- */
-class ResultCollection implements ResultCollectionInterface, \Iterator, \Countable
+
+class ResultCollection implements ResultCollectionInterface
 {
     /**
      * @var ResultInterface[]

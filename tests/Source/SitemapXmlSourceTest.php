@@ -31,4 +31,23 @@ class SitemapXmlSourceTest extends TestCase {
 
     $this->assertEquals(2, $result->count());
   }
+
+    public function testCompressedSitemapIsUncompressed() {
+        $sitemapXml = realpath(__DIR__ . '/../data/sitemap.xml.gz');
+        $sitemapXml = file_get_contents($sitemapXml);
+
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/xml'], $sitemapXml),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $httpClient = new Client(['handler' => $handlerStack]);
+
+        $sitemapXmlSource = new SitemapXmlSource($httpClient);
+        $xmlString = $sitemapXmlSource->fetch('');
+
+        $xmlParse = new SitemapXmlParser();
+        $result = $xmlParse->parse($xmlString);
+
+        $this->assertEquals(2, $result->count());
+    }
 }

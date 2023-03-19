@@ -6,6 +6,7 @@
 >
     <php>
         <env name="COLUMNS" value="300" />
+        <server name="KERNEL_CLASS" value="\Hashbangcode\SitemapChecker\AppKernel" />
     </php>
     <testsuites>
         <testsuite name="tests">
