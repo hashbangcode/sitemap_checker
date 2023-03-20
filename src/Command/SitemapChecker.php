@@ -3,6 +3,7 @@
 namespace Hashbangcode\SitemapChecker\Command;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
@@ -11,6 +12,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'sitemap-checker:run',
@@ -21,29 +23,61 @@ use Symfony\Component\Console\Output\OutputInterface;
 class SitemapChecker extends Command
 {
 
-    public function __construct()
+    /**
+     * @var \GuzzleHttp\Client
+     */
+    protected ?Client $client = NULL;
+
+    /**
+     * @return Client
+     */
+    public function getClient(): Client
     {
-        parent::__construct();
+        if ($this->client === NULL) {
+            $this->client = new Client();
+        }
+        return $this->client;
+    }
+
+    /**
+     * @param Client $client
+     * @return SitemapChecker
+     */
+    public function setClient(Client $client): SitemapChecker
+    {
+        $this->client = $client;
+        return $this;
     }
 
     protected function configure(): void
     {
         $this->addArgument('sitemap', InputArgument::REQUIRED, 'The sitemap.xml file.');
-        $this->addArgument('client', InputArgument::OPTIONAL, 'The http client.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemap = $input->getArgument('sitemap');
-        $client = $input->getArgument('client');
 
-        if (!$client) {
-            $client = new Client();
+        $io = new SymfonyStyle($input, $output);
+
+        if (is_string($sitemap) === FALSE || filter_var($sitemap, FILTER_VALIDATE_URL) === FALSE) {
+            $io->error('Invalid sitemap URL found.');
+            return Command::INVALID;
         }
 
+        $client = $this->getClient();
+
         $sitemapSource = new SitemapXmlSource($client);
+        try {
+            $sitemapData = $sitemapSource->fetch($sitemap);
+        }
+        catch (ClientException $e) {
+            $io->error('Unable to download sitemap.xml file data from ' . $sitemap);
+            return Command::FAILURE;
+        }
+        
         $sitemapParser = new SitemapXmlParser();
-        $list = $sitemapParser->parse($sitemapSource->fetch($sitemap));
+        $list = $sitemapParser->parse($sitemapData);
 
         $output->writeln($list->count() . ' URLs found, beginning processing.');
 

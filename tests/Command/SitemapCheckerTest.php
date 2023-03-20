@@ -29,10 +29,10 @@ class SitemapCheckerTest extends KernelTestCase
         $application = $container->get(Application::class);
 
         $command = $application->find('sitemap-checker:run');
+        $command->setClient($httpClient);
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'sitemap' => 'https://www.example.com/sitemap.xml',
-            'client' => $httpClient,
+            'sitemap' => 'https://www.example.com/sitemap.xml'
         ]);
 
         $output = $commandTester->getDisplay();
