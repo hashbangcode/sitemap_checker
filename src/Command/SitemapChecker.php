@@ -75,7 +75,7 @@ class SitemapChecker extends Command
             $io->error('Unable to download sitemap.xml file data from ' . $sitemap);
             return Command::FAILURE;
         }
-        
+
         $sitemapParser = new SitemapXmlParser();
         $list = $sitemapParser->parse($sitemapData);
 
