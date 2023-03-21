@@ -2,8 +2,6 @@
 
 namespace Hashbangcode\SitemapChecker\Result;
 
-use Hashbangcode\SitemapChecker\UrlInterface;
-
 
 class ResultCollection implements ResultCollectionInterface
 {

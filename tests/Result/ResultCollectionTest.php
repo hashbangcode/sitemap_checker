@@ -4,8 +4,7 @@ namespace Hashbangcode\SitemapChecker\Test\Result;
 
 use Hashbangcode\SitemapChecker\Result\Result;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
-use Hashbangcode\SitemapChecker\Url;
-use Hashbangcode\SitemapChecker\UrlCollection;
+use Hashbangcode\SitemapChecker\Url\Url;
 use PHPUnit\Framework\TestCase;
 
 class ResultCollectionTest extends TestCase

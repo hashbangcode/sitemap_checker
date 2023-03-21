@@ -2,7 +2,7 @@
 
 namespace Hashbangcode\SitemapChecker\Parser;
 
-use Hashbangcode\SitemapChecker\UrlCollectionInterface;
+use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 interface ParserInterface
 {

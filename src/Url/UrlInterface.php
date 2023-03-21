@@ -1,6 +1,6 @@
 <?php
 
-namespace Hashbangcode\SitemapChecker;
+namespace Hashbangcode\SitemapChecker\Url;
 
 interface UrlInterface
 {

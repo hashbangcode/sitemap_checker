@@ -3,12 +3,12 @@
 namespace Hashbangcode\SitemapChecker\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Psr7\Response;
 use Hashbangcode\SitemapChecker\Result\Result;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\Result\ResultCollectionInterface;
-use Hashbangcode\SitemapChecker\UrlCollectionInterface;
-use GuzzleHttp\Promise\EachPromise;
+use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 
 class GuzzlePromiseCrawler extends GuzzleCrawler

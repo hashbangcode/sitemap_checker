@@ -2,9 +2,9 @@
 
 namespace Hashbangcode\SitemapChecker\Parser;
 
-use Hashbangcode\SitemapChecker\Url;
-use Hashbangcode\SitemapChecker\UrlCollection;
-use Hashbangcode\SitemapChecker\UrlCollectionInterface;
+use Hashbangcode\SitemapChecker\Url\Url;
+use Hashbangcode\SitemapChecker\Url\UrlCollection;
+use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 class UrlListParser extends ParserBase
 {

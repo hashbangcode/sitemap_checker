@@ -2,7 +2,7 @@
 
 namespace Hashbangcode\SitemapChecker\Result;
 
-use Hashbangcode\SitemapChecker\UrlInterface;
+use Hashbangcode\SitemapChecker\Url\UrlInterface;
 
 interface ResultInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hashbangcode\SitemapChecker\Test;
+namespace Hashbangcode\SitemapChecker\Test\Url;
 
-use Hashbangcode\SitemapChecker\Url;
+use Hashbangcode\SitemapChecker\Url\Url;
 use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase

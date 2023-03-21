@@ -6,10 +6,9 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Hashbangcode\SitemapChecker\Crawler\GuzzleCrawler;
 use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
-use Hashbangcode\SitemapChecker\Url;
-use Hashbangcode\SitemapChecker\UrlCollection;
+use Hashbangcode\SitemapChecker\Url\Url;
+use Hashbangcode\SitemapChecker\Url\UrlCollection;
 use PHPUnit\Framework\TestCase;
 
 

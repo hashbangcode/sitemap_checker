@@ -3,7 +3,7 @@
 namespace Hashbangcode\SitemapChecker\Test\Result;
 
 use Hashbangcode\SitemapChecker\Result\Result;
-use Hashbangcode\SitemapChecker\Url;
+use Hashbangcode\SitemapChecker\Url\Url;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase {

@@ -4,9 +4,8 @@ namespace Hashbangcode\SitemapChecker\Crawler;
 
 use Hashbangcode\SitemapChecker\Result\ResultCollectionInterface;
 use Hashbangcode\SitemapChecker\Result\ResultInterface;
-use Hashbangcode\SitemapChecker\UrlCollection;
-use Hashbangcode\SitemapChecker\UrlCollectionInterface;
-use Hashbangcode\SitemapChecker\UrlInterface;
+use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
+use Hashbangcode\SitemapChecker\Url\UrlInterface;
 
 interface CrawlerInterface
 {

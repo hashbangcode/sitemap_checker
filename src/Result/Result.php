@@ -2,8 +2,7 @@
 
 namespace Hashbangcode\SitemapChecker\Result;
 
-use Hashbangcode\SitemapChecker\Url;
-use Hashbangcode\SitemapChecker\UrlInterface;
+use Hashbangcode\SitemapChecker\Url\UrlInterface;
 
 /**
  * The Result object.
@@ -42,7 +41,7 @@ class Result implements ResultInterface
     /**
      * Set the Url object.
      *
-     * @param \Hashbangcode\SitemapChecker\UrlInterface $url
+     * @param \Hashbangcode\SitemapChecker\Url\UrlInterface $url
      *   The url object.
      *
      * @return ResultInterface

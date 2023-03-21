@@ -5,11 +5,8 @@ namespace Hashbangcode\SitemapChecker\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Hashbangcode\SitemapChecker\Result\Result;
-use Hashbangcode\SitemapChecker\Result\ResultCollection;
-use Hashbangcode\SitemapChecker\Result\ResultCollectionInterface;
 use Hashbangcode\SitemapChecker\Result\ResultInterface;
-use Hashbangcode\SitemapChecker\UrlCollection;
-use Hashbangcode\SitemapChecker\UrlInterface;
+use Hashbangcode\SitemapChecker\Url\UrlInterface;
 
 class GuzzleCrawler extends CrawlerBase
 {
