@@ -12,7 +12,7 @@ Download the PHP files to a directory and run `composer install`. This will set 
 
 To run the application on the command line use the following.
 
-`php application.php sitemap-checker:run:run https://www.example.com/sitemap.xml`
+`php application.php sitemap-checker:run https://www.example.com/sitemap.xml`
 
 This will download the sitemap.xml file, let you know how many URLs it detected before starting to crawl them.
 
