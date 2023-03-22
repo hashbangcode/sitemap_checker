@@ -41,6 +41,13 @@ class UrlCollectionTest extends TestCase
       $this->assertEquals('https://www.example.com/', $url->getRawUrl());
   }
 
+  public function testFindMissingUrlFromCollectionReturnsFalse() {
+    $urlCollection = new UrlCollection();
+    $urlCollection->add(new Url('https://www.example.com/'));
+    $url = $urlCollection->find(1);
+    $this->assertEquals(false, $url);
+  }
+
   public function testUrlCollectionChunk() {
       $urlCollection = new UrlCollection();
       $urlCollection->add(new Url('https://www.example.com/'));
