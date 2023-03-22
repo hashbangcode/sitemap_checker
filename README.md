@@ -37,7 +37,7 @@ xdebug.mode=coverage
 ## To Do
 
 - Better results presenting. Render as HTML, XML, json etc.
-- Incorporate the chrome library into the crawler.
+- Add a way to auto-download the chrome download.
 - Look at using a database.
 - Add Docker container to wrap application.
 - Batching processing of urls.
