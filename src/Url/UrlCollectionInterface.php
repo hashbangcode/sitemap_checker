@@ -12,4 +12,11 @@ interface UrlCollectionInterface extends \Iterator, \Countable
     public function delete(int $index): void;
 
     public function find(int $id) : UrlInterface|false;
+
+  /**
+   * @param int $chunkLength
+   *
+   * @return UrlCollectionInterface[]
+   */
+  public function chunk(int $chunkLength) : array;
 }

@@ -12,7 +12,7 @@ class SitemapXmlParser extends ParserBase
     {
         $linkCollection = new UrlCollection();
 
-        $xml = simplexml_load_string($data);
+        $xml = simplexml_load_string($data, null, LIBXML_NOWARNING | LIBXML_NOERROR);
 
         if (isset($xml->url) && count($xml->url) > 0) {
             foreach ($xml->url as $url) {

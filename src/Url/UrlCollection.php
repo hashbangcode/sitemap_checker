@@ -59,15 +59,13 @@ class UrlCollection implements UrlCollectionInterface
         return false;
     }
 
-    /**
-     * @param int<1, max> $chunkLength
-     *
-     * @return UrlCollectionInterface[]
-     */
+  /**
+   * {@inheritDoc}
+   */
     public function chunk(int $chunkLength) : array
     {
         $collections = [];
-        foreach (array_chunk($this->urls, $chunkLength) as $urlCollectionChunk) {
+        foreach (array_chunk($this->urls, max(1, $chunkLength)) as $urlCollectionChunk) {
             $urlCollection = new UrlCollection();
             foreach ($urlCollectionChunk as $url) {
                 $urlCollection->add($url);

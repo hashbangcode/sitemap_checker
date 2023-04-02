@@ -13,4 +13,5 @@ interface UrlInterface
     public function getPath(): string;
 
     public function getQuery(): string;
+
 }
