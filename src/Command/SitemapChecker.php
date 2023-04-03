@@ -6,11 +6,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
+use Hashbangcode\SitemapChecker\Result\ResultCollection;
+use Hashbangcode\SitemapChecker\ResultRender\CsvResultRender;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -27,6 +31,8 @@ class SitemapChecker extends Command
      * @var \GuzzleHttp\Client
      */
     protected ?Client $client = NULL;
+
+    protected int $chunkLength = 50;
 
     /**
      * @return Client
@@ -52,6 +58,7 @@ class SitemapChecker extends Command
     protected function configure(): void
     {
         $this->addArgument('sitemap', InputArgument::REQUIRED, 'The sitemap.xml file.');
+        $this->addOption('output', 'o',  InputOption::VALUE_OPTIONAL, 'The output format.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -79,14 +86,44 @@ class SitemapChecker extends Command
         $sitemapParser = new SitemapXmlParser();
         $list = $sitemapParser->parse($sitemapData);
 
+        $listChunks = $list->chunk($this->chunkLength);
         $output->writeln($list->count() . ' URLs found, beginning processing.');
 
         $crawler = new GuzzlePromiseCrawler();
         $crawler->setEngine($client);
-        $results = $crawler->crawl($list);
 
-        foreach ($results as $result) {
-            $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getResponseCode());
+        $results = new ResultCollection();
+
+        $progressBar = new ProgressBar($output, $list->count());
+        $progressBar->setFormat('normal');
+        $progressBar->start();
+
+        foreach ($listChunks as $listChunk) {
+          $result = $crawler->crawl($listChunk);
+          $progressBar->advance($this->chunkLength);
+          foreach ($result as $res) {
+            $results->add($res);
+          }
+        }
+
+        $progressBar->finish();
+
+        $output = $input->getOption('output');
+
+        if ($output === NULL) {
+          foreach ($results as $result) {
+              $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getResponseCode());
+          }
+        }
+        elseif (str_contains($output, '.csv')) {
+          $io->info('Writing CSV file.');
+          $resultRender = new CsvResultRender();
+          $renderedResult = $resultRender->render($results);
+          file_put_contents($output, $renderedResult);
+        }
+        else {
+          $io->error('Invalid output format found.');
+          return Command::INVALID;
         }
 
         return Command::SUCCESS;
