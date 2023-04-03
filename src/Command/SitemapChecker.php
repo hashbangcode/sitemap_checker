@@ -5,10 +5,12 @@ namespace Hashbangcode\SitemapChecker\Command;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
+use Hashbangcode\SitemapChecker\Parser\SitemapIndexXmlParser;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\ResultRender\CsvResultRender;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
+use Hashbangcode\SitemapChecker\Url\UrlCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -83,8 +85,25 @@ class SitemapChecker extends Command
             return Command::FAILURE;
         }
 
-        $sitemapParser = new SitemapXmlParser();
-        $list = $sitemapParser->parse($sitemapData);
+        if ($sitemapSource->isSitemapIndex()) {
+          $io->info('Sitemap index file found, parsing contents.');
+          $sitemapIndexXmlParse = new SitemapIndexXmlParser();
+          $sitemapList = $sitemapIndexXmlParse->parse($sitemapData);
+
+          $list = new UrlCollection();
+
+          foreach ($sitemapList as $sitemapUrl) {
+            $sitemapData = $sitemapSource->fetch($sitemapUrl->getRawUrl());
+            $sitemapParser = new SitemapXmlParser();
+            $urlList = $sitemapParser->parse($sitemapData);
+            foreach ($urlList as $url) {
+              $list->add($url);
+            }
+          }
+        } else {
+          $sitemapParser = new SitemapXmlParser();
+          $list = $sitemapParser->parse($sitemapData);
+        }
 
         $listChunks = $list->chunk($this->chunkLength);
         $output->writeln($list->count() . ' URLs found, beginning processing.');
