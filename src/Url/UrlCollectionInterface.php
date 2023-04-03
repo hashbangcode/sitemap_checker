@@ -7,7 +7,7 @@ namespace Hashbangcode\SitemapChecker\Url;
  */
 interface UrlCollectionInterface extends \Iterator, \Countable
 {
-    public function add(UrlInterface $link): void;
+    public function add(UrlInterface $url): void;
 
     public function delete(int $index): void;
 
