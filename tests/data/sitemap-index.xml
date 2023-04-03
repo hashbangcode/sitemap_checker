@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc><![CDATA[https://www.example.com/sitemap1.xml]]></loc>
+        <lastmod><![CDATA[2023-03-26T13:21:45+00:00]]></lastmod>
+    </sitemap>
+    <sitemap>
+        <loc><![CDATA[https://www.example.com/sitemap2.xml]]></loc>
+        <lastmod><![CDATA[2023-02-12T19:40:36+00:00]]></lastmod>
+    </sitemap>
+</sitemapindex>

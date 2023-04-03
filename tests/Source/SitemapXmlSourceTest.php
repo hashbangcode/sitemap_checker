@@ -50,4 +50,20 @@ class SitemapXmlSourceTest extends TestCase {
 
         $this->assertEquals(2, $result->count());
     }
+
+  public function testSitemapIndexfileIsClassedAsIndex() {
+    $sitemapIndexXml = realpath(__DIR__ . '/../data/sitemap-index.xml');
+    $sitemapIndexXml = file_get_contents($sitemapIndexXml);
+
+    $mock = new MockHandler([
+      new Response(200, ['Content-Type' => 'application/xml'], $sitemapIndexXml),
+    ]);
+    $handlerStack = HandlerStack::create($mock);
+    $httpClient = new Client(['handler' => $handlerStack]);
+
+    $sitemapXmlSource = new SitemapXmlSource($httpClient);
+    $sitemapXmlSource->fetch('');
+
+    $this->assertTrue($sitemapXmlSource->isSitemapIndex());
+  }
 }
