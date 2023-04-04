@@ -60,7 +60,7 @@ class SitemapChecker extends Command
     protected function configure(): void
     {
         $this->addArgument('sitemap', InputArgument::REQUIRED, 'The sitemap.xml file.');
-        $this->addOption('output', 'o',  InputOption::VALUE_OPTIONAL, 'The output format.');
+        $this->addOption('result-file', 'r',  InputOption::VALUE_OPTIONAL, 'The output file.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -127,18 +127,18 @@ class SitemapChecker extends Command
 
         $progressBar->finish();
 
-        $output = $input->getOption('output');
+        $resultFile = $input->getOption('result-file');
 
-        if ($output === NULL) {
+        if ($resultFile === NULL) {
           foreach ($results as $result) {
               $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getResponseCode());
           }
         }
-        elseif (str_contains($output, '.csv')) {
+        elseif (str_contains($resultFile, '.csv')) {
           $io->info('Writing CSV file.');
           $resultRender = new CsvResultRender();
           $renderedResult = $resultRender->render($results);
-          file_put_contents($output, $renderedResult);
+          file_put_contents($resultFile, $renderedResult);
         }
         else {
           $io->error('Invalid output format found.');
