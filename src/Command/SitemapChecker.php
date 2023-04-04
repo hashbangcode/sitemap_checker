@@ -61,11 +61,13 @@ class SitemapChecker extends Command
     {
         $this->addArgument('sitemap', InputArgument::REQUIRED, 'The sitemap.xml file.');
         $this->addOption('result-file', 'r',  InputOption::VALUE_OPTIONAL, 'The output file.');
+        $this->addOption('limit', 'l',  InputOption::VALUE_OPTIONAL, 'Limit the number of URLs polled.', -1);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemap = $input->getArgument('sitemap');
+        $limit = $input->getOption('limit');
 
         $io = new SymfonyStyle($input, $output);
 
@@ -103,6 +105,11 @@ class SitemapChecker extends Command
         } else {
           $sitemapParser = new SitemapXmlParser();
           $list = $sitemapParser->parse($sitemapData);
+        }
+
+        if ($limit !== -1) {
+          $listChunks = $list->chunk($limit);
+          $list = $listChunks[0];
         }
 
         $listChunks = $list->chunk($this->chunkLength);
