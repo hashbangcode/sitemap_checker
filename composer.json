@@ -1,6 +1,7 @@
 {
     "name": "hashbangcode/sitemap_checker",
     "type": "project",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Hashbangcode\\SitemapChecker\\": "src/"
