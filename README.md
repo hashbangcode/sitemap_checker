@@ -40,11 +40,24 @@ Without this option in place the tool will print results to the command line.
 
 ### Limit
 
-The `--limit` option (or `-l` for short) simply prevents the . 
+The `--limit` option (or `-l` for short) simply prevents the tool from checking any more than this limit. 
 
 For example, this will only process 10 results, regardless of the number of URLs found.
 
 `php application.php sc:run -l 10 https://www.example.com/sitemap.xml`
+
+### engine
+
+The `--engine` option (or `-e` for short) changes the type of checking engine used.
+
+Options are:
+- 'guzzle' : (Default) Run the sitemap checker using Guzzle promises.
+- 'chrome' : Run the sitemap checker using headless Chrome. To get this running you'll first need to add the
+chrome binary to the location `./chrome/chrome`.
+
+For example, to change the sitemap checker engine to use headless Chrome use the following.
+
+`php application.php sc:run -e chrome https://www.example.com/sitemap.xml`
 
 ## Testing
 
