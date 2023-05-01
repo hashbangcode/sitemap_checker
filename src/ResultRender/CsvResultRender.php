@@ -10,7 +10,12 @@ class CsvResultRender implements ResultRenderInterface {
   {
     $string = '';
     foreach ($resultCollection as $result) {
-      $string .= implode(',',[$result->getUrl()->getRawUrl(),$result->getResponseCode()]).PHP_EOL;
+      $line = [
+        $result->getUrl()->getRawUrl(),
+        $result->getTitle(),
+        $result->getResponseCode(),
+      ];
+      $string .= '"' . implode('","', $line) . '"' . PHP_EOL;
     }
     return $string;
   }

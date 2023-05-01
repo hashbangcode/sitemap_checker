@@ -4,6 +4,7 @@ namespace Hashbangcode\SitemapChecker\Command;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Hashbangcode\SitemapChecker\Crawler\ChromeCrawler;
 use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
 use Hashbangcode\SitemapChecker\Parser\SitemapIndexXmlParser;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
@@ -11,6 +12,7 @@ use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\ResultRender\CsvResultRender;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
 use Hashbangcode\SitemapChecker\Url\UrlCollection;
+use HeadlessChromium\BrowserFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -62,12 +64,14 @@ class SitemapChecker extends Command
         $this->addArgument('sitemap', InputArgument::REQUIRED, 'The sitemap.xml file.');
         $this->addOption('result-file', 'r',  InputOption::VALUE_OPTIONAL, 'The output file.');
         $this->addOption('limit', 'l',  InputOption::VALUE_OPTIONAL, 'Limit the number of URLs polled.', -1);
+        $this->addOption('engine', 'e',  InputOption::VALUE_OPTIONAL, 'The engine to use, defaults to guzzle.', 'guzzle');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemap = $input->getArgument('sitemap');
         $limit = $input->getOption('limit');
+        $engine = $input->getOption('engine');
 
         $io = new SymfonyStyle($input, $output);
 
@@ -115,8 +119,19 @@ class SitemapChecker extends Command
         $listChunks = $list->chunk($this->chunkLength);
         $output->writeln($list->count() . ' URLs found, beginning processing.');
 
-        $crawler = new GuzzlePromiseCrawler();
-        $crawler->setEngine($client);
+        switch ($engine) {
+          case 'chrome':
+            $crawler = new ChromeCrawler();
+            $browserFactory = new BrowserFactory('./chrome/chrome');
+            $crawler->setEngine($browserFactory->createBrowser());
+            break;
+
+          case 'guzzle':
+          default:
+            $crawler = new GuzzlePromiseCrawler();
+            $crawler->setEngine($client);
+            break;
+        }
 
         $results = new ResultCollection();
 
@@ -138,7 +153,7 @@ class SitemapChecker extends Command
 
         if ($resultFile === NULL) {
           foreach ($results as $result) {
-              $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getResponseCode());
+              $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getTitle() . ' ' . $result->getResponseCode());
           }
         }
         elseif (str_contains($resultFile, '.csv')) {

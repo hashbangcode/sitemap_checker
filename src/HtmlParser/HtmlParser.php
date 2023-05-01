@@ -9,7 +9,12 @@ use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 class HtmlParser implements HtmlParserInterface
 {
 
-  public function parse(string $data, Url $url): UrlCollectionInterface
+  /**
+   * @param string $data
+   * @param Url $url
+   * @return UrlCollectionInterface
+   */
+  public function extractLinksAsUrls(string $data, Url $url): UrlCollectionInterface
   {
     $linkCollection = new UrlCollection();
 
@@ -99,5 +104,21 @@ class HtmlParser implements HtmlParserInterface
       }
     }
     return $linkArray;
+  }
+
+  /**
+   * Extract the title from the HTML page.
+   *
+   * @param string $data
+   *   The HTML data.
+   *
+   * @return string
+   *   The extracted title, or a blank string if no title was found.
+   */
+  public function extractTitle($data) {
+    if (preg_match('/\<title\>(.*?)\<\/title\>/i', $data, $matches) === 1) {
+      return $matches[1];
+    }
+    return '';
   }
 }

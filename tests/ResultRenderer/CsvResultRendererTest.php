@@ -15,6 +15,7 @@ class CsvResultRendererTest extends TestCase
     $url = new Url('https://www.example.com/');
     $result = new Result();
     $result->setUrl($url);
+    $result->setTitle('Title');
     $result->setResponseCode(200);
 
     $resultCollection = new ResultCollection();
@@ -22,7 +23,7 @@ class CsvResultRendererTest extends TestCase
 
     $csvResultRenderer = new CsvResultRender();
     $csv = $csvResultRenderer->render($resultCollection);
-    $this->assertStringContainsString('https://www.example.com/,200', $csv);
+    $this->assertStringContainsString('"https://www.example.com/","Title","200"', $csv);
   }
 
 }

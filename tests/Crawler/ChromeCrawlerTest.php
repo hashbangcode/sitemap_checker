@@ -41,7 +41,7 @@ class ChromeCrawlerTest extends TestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $pageEvaluation->method('getReturnValue')->willReturn('<html></html>');
+    $pageEvaluation->method('getReturnValue')->willReturn('<html><title>Title</title><body></body></html>');
 
     $page->method('evaluate')->willReturn($pageEvaluation);
 

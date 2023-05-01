@@ -5,6 +5,7 @@ namespace Hashbangcode\SitemapChecker\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Psr7\Response;
+use Hashbangcode\SitemapChecker\HtmlParser\HtmlParser;
 use Hashbangcode\SitemapChecker\Result\Result;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\Result\ResultCollectionInterface;
@@ -26,15 +27,18 @@ class GuzzlePromiseCrawler extends GuzzleCrawler
         })();
 
         $resultCollection = new ResultCollection();
+        $htmlParser = new HtmlParser();
 
         $eachPromise = new EachPromise($promises, [
             'concurrency' => 10,
-            'fulfilled' => function (Response $response, $index) use ($urlCollection, $resultCollection) {
+            'fulfilled' => function (Response $response, $index) use ($urlCollection, $resultCollection, $htmlParser) {
                 $url = $urlCollection->find($index);
                 if ($url !== false) {
                     $resultObject = new Result();
                     $resultObject->setUrl($url);
                     $resultObject->setResponseCode($response->getStatusCode());
+                    $resultObject->setTitle($htmlParser->extractTitle($response->getBody()->getContents()));
+                    $resultObject->setHeaders($response->getHeaders());
                     $resultCollection->add($resultObject);
                 }
                 $urlCollection->delete($index);

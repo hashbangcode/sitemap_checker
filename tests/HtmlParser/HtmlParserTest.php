@@ -16,7 +16,7 @@ class HtmlParserTest extends TestCase
     $htmlPage = file_get_contents($htmlPage);
 
     $htmlParser = new HtmlParser();
-    $list = $htmlParser->parse($htmlPage, $url);
+    $list = $htmlParser->extractLinksAsUrls($htmlPage, $url);
 
     $this->assertEquals(6, $list->count());
 
@@ -62,6 +62,8 @@ class HtmlParserTest extends TestCase
   }
 
   /**
+   * Test that single links are extracted and translated correctly.
+   *
    * @param $link
    * @param $rootUrl
    * @param $result
@@ -75,6 +77,12 @@ class HtmlParserTest extends TestCase
     $this->assertEquals($result, $export[0]);
   }
 
+  /**
+   * Data provider for testExtractSingleLinks.
+   *
+   * @return array
+   *   The tests.
+   */
   public static function extractSingleLinksProvider() {
     $links = [];
 
@@ -105,4 +113,16 @@ class HtmlParserTest extends TestCase
     return $links;
   }
 
+  /**
+   * Test that the page title is extracted correctly.
+   */
+  public function testHtmlParserExtractsTitle()
+  {
+    $htmlPage = realpath(__DIR__ . '/../data/page.html');
+    $htmlPage = file_get_contents($htmlPage);
+
+    $htmlParser = new HtmlParser();
+    $title = $htmlParser->extractTitle($htmlPage);
+    $this->assertEquals('HTML 5 Boilerplate', $title);
+  }
 }

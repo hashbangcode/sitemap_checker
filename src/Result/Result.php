@@ -25,6 +25,20 @@ class Result implements ResultInterface
      */
     protected int $responseCode;
 
+  /**
+   * The headers in the response.
+   *
+   * @var array
+   */
+    protected array $headers;
+
+  /**
+   * The title of the found page.
+   *
+   * @var string
+   */
+    protected string $title;
+
     /**
      * Creates a Result object.
      *
@@ -89,4 +103,26 @@ class Result implements ResultInterface
     {
         return $this->url;
     }
+
+  public function getHeaders(): array
+  {
+    return $this->headers;
+  }
+
+  public function setHeaders(array $headers)
+  {
+    $this->headers = $headers;
+  }
+
+  public function setTitle(string $title)
+  {
+    $this->title = $title;
+  }
+
+  public function getTitle(): string
+  {
+    return $this->title;
+  }
+
+
 }
