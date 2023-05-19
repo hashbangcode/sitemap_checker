@@ -112,8 +112,10 @@ class SitemapChecker extends Command
         }
 
         if ($limit !== -1) {
-          $listChunks = $list->chunk($limit);
-          $list = $listChunks[0];
+          if (is_int($limit) === TRUE) {
+            $listChunks = $list->chunk($limit);
+            $list = $listChunks[0];
+          }
         }
 
         $listChunks = $list->chunk($this->chunkLength);
@@ -156,7 +158,7 @@ class SitemapChecker extends Command
               $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getTitle() . ' ' . $result->getResponseCode());
           }
         }
-        elseif (str_contains($resultFile, '.csv')) {
+        elseif (is_string($resultFile) && str_contains($resultFile, '.csv')) {
           $io->info('Writing CSV file.');
           $resultRender = new CsvResultRender();
           $renderedResult = $resultRender->render($results);

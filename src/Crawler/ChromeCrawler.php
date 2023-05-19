@@ -27,8 +27,12 @@ class ChromeCrawler extends CrawlerBase
                 $result->setHeaders($params['response']['headers']);
             });
             $page->navigate($url->getRawUrl())->waitForNavigation();
-            $value = (string) $page->evaluate('document.documentElement.outerHTML')->getReturnValue();
-            $result->setTitle($htmlParser->extractTitle($value));
+            $value = $page->evaluate('document.documentElement.outerHTML')->getReturnValue();
+            if (is_string($value)) {
+              $result->setTitle($htmlParser->extractTitle($value));
+              $result->setPageSize(mb_strlen($value));
+              $result->setBody($value);
+            }
         }
 
         return $result;

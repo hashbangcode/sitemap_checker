@@ -25,6 +25,8 @@ class GuzzleCrawler extends CrawlerBase
             $result->setResponseCode($response->getStatusCode());
             $result->setTitle($htmlParser->extractTitle($response->getBody()->getContents()));
             $result->setHeaders($response->getHeaders());
+            $result->setPageSize($response->getBody()->getSize() ?: 0);
+            $result->setBody($response->getBody());
         }
 
         return $result;

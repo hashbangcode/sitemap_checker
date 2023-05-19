@@ -2,6 +2,7 @@
 
 namespace Hashbangcode\SitemapChecker\HtmlParser;
 
+use Hashbangcode\SitemapChecker\Url\Link;
 use Hashbangcode\SitemapChecker\Url\Url;
 use Hashbangcode\SitemapChecker\Url\UrlCollection;
 use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
@@ -21,8 +22,11 @@ class HtmlParser implements HtmlParserInterface
     $links = $this->extractLinks($data, $url->getRawUrl());
 
     foreach ($links as $link) {
-      $foundUrl = new Url($link);
-      $linkCollection->add($foundUrl);
+      if (isset($link['url']) && isset($link['text'])) {
+        $foundUrl = new Link($link['url']);
+        $foundUrl->setText($link['text']);
+        $linkCollection->add($foundUrl);
+      }
     }
 
     return $linkCollection;
@@ -36,11 +40,11 @@ class HtmlParser implements HtmlParserInterface
    * @param string $rootUrl
    *   The URL to associate with the links found.
    *
-   * @return array<string>
+   * @return array['url' => string, 'link' => string]
    *   The list of found links.
    */
   public function extractLinks(string $data, string $rootUrl):array {
-
+//    * @return array['url' => string, 'link' => string]
     // The base URL.
     $baseUrl = '';
 
@@ -63,6 +67,7 @@ class HtmlParser implements HtmlParserInterface
       foreach ($matches as $match) {
         if (strlen($match[1]) > 0 && $match[1][0] != '#') {
             $foundUrl = $match[1];
+            $foundText = $match[2];
 
             // Might be non-http location
             $testMatch = parse_url($foundUrl);
@@ -99,7 +104,10 @@ class HtmlParser implements HtmlParserInterface
             // Final check to ensure that any relative URLs are absolute.
             $foundUrl = $baseUrl . $foundUrl;
           }
-          $linkArray[] = trim($foundUrl);
+          $linkArray[] = [
+            'url' => trim($foundUrl),
+            'text' => $foundText,
+          ];
         }
       }
     }

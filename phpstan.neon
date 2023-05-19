@@ -2,3 +2,6 @@ parameters:
     level: 9
     paths:
         - src
+
+    ignoreErrors:
+        - '#Method [A-Za-z\\_]+::extractLinks\(\) return type has no value type specified in iterable type array.#'

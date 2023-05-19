@@ -28,7 +28,7 @@ class Result implements ResultInterface
   /**
    * The headers in the response.
    *
-   * @var array
+   * @var array<array<string>>
    */
     protected array $headers;
 
@@ -38,6 +38,20 @@ class Result implements ResultInterface
    * @var string
    */
     protected string $title;
+
+  /**
+   * The size of the page.
+   *
+   * @var int
+   */
+    protected int $pageSize;
+
+  /**
+   * The body.
+   *
+   * @var string
+   */
+    protected string $body;
 
     /**
      * Creates a Result object.
@@ -114,9 +128,10 @@ class Result implements ResultInterface
     $this->headers = $headers;
   }
 
-  public function setTitle(string $title)
+  public function setTitle(string $title):self
   {
     $this->title = $title;
+    return $this;
   }
 
   public function getTitle(): string
@@ -124,5 +139,36 @@ class Result implements ResultInterface
     return $this->title;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getPageSize(): int
+  {
+    return $this->pageSize;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function setPageSize(int $pageSize): self
+  {
+    $this->pageSize = $pageSize;
+    return $this;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getBody(): string {
+    return $this->body;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function setBody(string $body): self {
+    $this->body = $body;
+    return $this;
+  }
 
 }

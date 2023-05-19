@@ -7,6 +7,7 @@ class Url implements UrlInterface
     protected string $rawUrl;
     protected string $scheme;
     protected string $host;
+
     protected string $path;
     protected string $query;
 

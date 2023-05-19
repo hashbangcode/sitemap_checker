@@ -15,8 +15,9 @@ use PHPUnit\Framework\TestCase;
 class GuzzlePromiseCrawlerTest extends TestCase {
 
   public function testGuzzlePromiseCrawler() {
+    $body = '<html><title>Title</title><body><p>Result.</p></body></html>';
     $mock = new MockHandler([
-      new Response(200, ['Content-Type' => 'application/html'], '<html><title>Title</title><body><p>Result.</p></body></html>'),
+      new Response(200, ['Content-Type' => 'application/html'], $body),
     ]);
     $handlerStack = HandlerStack::create($mock);
     $httpClient = new Client(['handler' => $handlerStack]);
@@ -29,6 +30,7 @@ class GuzzlePromiseCrawlerTest extends TestCase {
     $resultsCollection = $guzzleCrawler->crawl($urlCollection);
     $this->assertEquals(200, $resultsCollection->current()->getResponseCode());
     $this->assertEquals('Title', $resultsCollection->current()->getTitle());
+    $this->assertEquals($body, $resultsCollection->current()->getBody());
     $this->assertEquals('application/html', $resultsCollection->current()->getHeaders()['Content-Type'][0]);
   }
 }

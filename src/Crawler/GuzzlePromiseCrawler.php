@@ -39,6 +39,8 @@ class GuzzlePromiseCrawler extends GuzzleCrawler
                     $resultObject->setResponseCode($response->getStatusCode());
                     $resultObject->setTitle($htmlParser->extractTitle($response->getBody()->getContents()));
                     $resultObject->setHeaders($response->getHeaders());
+                    $resultObject->setPageSize($response->getBody()->getSize() ?: 0);
+                    $resultObject->setBody($response->getBody());
                     $resultCollection->add($resultObject);
                 }
                 $urlCollection->delete($index);

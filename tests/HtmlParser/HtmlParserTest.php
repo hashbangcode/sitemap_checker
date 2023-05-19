@@ -18,12 +18,13 @@ class HtmlParserTest extends TestCase
     $htmlParser = new HtmlParser();
     $list = $htmlParser->extractLinksAsUrls($htmlPage, $url);
 
-    $this->assertEquals(6, $list->count());
+    $this->assertEquals(9, $list->count());
 
     // <a href="https://www.example.com/">Absolute home</a>
     $this->assertEquals('https', $list->current()->getScheme());
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/', $list->current()->getPath());
+    $this->assertEquals('Absolute home', $list->current()->getText());
 
     $list->next();
 
@@ -31,6 +32,15 @@ class HtmlParserTest extends TestCase
     $this->assertEquals('http', $list->current()->getScheme());
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/', $list->current()->getPath());
+    $this->assertEquals('Absolute home (http)', $list->current()->getText());
+
+    $list->next();
+
+    // <a href="/">Slash</a>
+    $this->assertEquals('https', $list->current()->getScheme());
+    $this->assertEquals('www.example.com', $list->current()->getHost());
+    $this->assertEquals('/', $list->current()->getPath());
+    $this->assertEquals('Slash', $list->current()->getText());
 
     $list->next();
 
@@ -38,6 +48,7 @@ class HtmlParserTest extends TestCase
     $this->assertEquals('https', $list->current()->getScheme());
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/', $list->current()->getPath());
+    $this->assertEquals('Home', $list->current()->getText());
 
     $list->next();
 
@@ -45,6 +56,7 @@ class HtmlParserTest extends TestCase
     $this->assertEquals('https', $list->current()->getScheme());
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/inner', $list->current()->getPath());
+    $this->assertEquals('Inner', $list->current()->getText());
 
     $list->next();
 
@@ -52,6 +64,7 @@ class HtmlParserTest extends TestCase
     $this->assertEquals('https', $list->current()->getScheme());
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/about', $list->current()->getPath());
+    $this->assertEquals('About', $list->current()->getText());
 
     $list->next();
 
@@ -59,6 +72,28 @@ class HtmlParserTest extends TestCase
     $this->assertEquals('https', $list->current()->getScheme());
     $this->assertEquals('www.example.com', $list->current()->getHost());
     $this->assertEquals('/path', $list->current()->getPath());
+    $this->assertEquals('URI fragment 1', $list->current()->getText());
+
+    $list->next();
+
+    // <a href="/"><strong>Strong text</strong></a>
+    $this->assertEquals('https', $list->current()->getScheme());
+    $this->assertEquals('www.example.com', $list->current()->getHost());
+    $this->assertEquals('/', $list->current()->getPath());
+    $this->assertEquals('<strong>Strong text</strong>', $list->current()->getText());
+
+    $list->next();
+
+    // <a href="/"><img src="/image.png" alt="Something" /></a>
+    $this->assertEquals('https', $list->current()->getScheme());
+    $this->assertEquals('www.example.com', $list->current()->getHost());
+    $this->assertEquals('/', $list->current()->getPath());
+    $this->assertEquals('<img src="/image.png" alt="Something" />', $list->current()->getText());
+
+    $list->next();
+
+    // The list should be empty now.
+    $this->assertFalse($list->valid());
   }
 
   /**
@@ -71,10 +106,11 @@ class HtmlParserTest extends TestCase
    * @dataProvider extractSingleLinksProvider
    *
    */
-  public function testExtractSingleLinks($link, $rootUrl, $result) {
+  public function testExtractSingleLinks($link, $rootUrl, $resultText, $resultUrl) {
     $htmlParser = new HtmlParser();
     $export = $htmlParser->extractLinks($link, $rootUrl);
-    $this->assertEquals($result, $export[0]);
+    $this->assertEquals($resultText, $export[0]['text']);
+    $this->assertEquals($resultUrl, $export[0]['url']);
   }
 
   /**
@@ -89,24 +125,28 @@ class HtmlParserTest extends TestCase
     $links[] = [
       '<a href="/">Home</a>',
       'https://www.example.com/',
+      'Home',
       'https://www.example.com/',
     ];
 
     $links[] = [
       '<a href="../">Home</a>',
       'https://www.example.com/inner/',
+      'Home',
       'https://www.example.com/',
     ];
 
     $links[] = [
       '<a href="../../../">Home</a>',
       'https://www.example.com/inner/path/deep/',
+      'Home',
       'https://www.example.com/',
     ];
 
     $links[] = [
       '<a href="/inner/../">Home</a>',
       'https://www.example.com/inner/path/',
+      'Home',
       'https://www.example.com/inner/',
     ];
 
@@ -124,5 +164,18 @@ class HtmlParserTest extends TestCase
     $htmlParser = new HtmlParser();
     $title = $htmlParser->extractTitle($htmlPage);
     $this->assertEquals('HTML 5 Boilerplate', $title);
+  }
+
+  /**
+   * Test that parsing a blank title will return an empty string.
+   */
+  public function testParsingBlankTitleReturnsEmptystring() {
+    $htmlParser = new HtmlParser();
+    $title = $htmlParser->extractTitle('');
+    $this->assertEquals('', $title);
+
+    $htmlParser = new HtmlParser();
+    $title = $htmlParser->extractTitle('<title></title>');
+    $this->assertEquals('', $title);
   }
 }
