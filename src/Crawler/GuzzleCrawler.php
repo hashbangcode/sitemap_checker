@@ -3,6 +3,8 @@
 namespace Hashbangcode\SitemapChecker\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use Hashbangcode\SitemapChecker\HtmlParser\HtmlParser;
 use Hashbangcode\SitemapChecker\Result\Result;
@@ -20,8 +22,14 @@ class GuzzleCrawler extends CrawlerBase
 
         $client = $this->getEngine();
         if ($client instanceof Client) {
-            /** @var \GuzzleHttp\Psr7\Response $response */
-            $response = $client->send($request);
+            try {
+              /** @var \GuzzleHttp\Psr7\Response $response */
+              $response = $client->send($request);
+            } catch (ClientException $e) {
+              $response = $e->getResponse();
+            } catch (ServerException $e) {
+              $response = $e->getResponse();
+            }
             $result->setResponseCode($response->getStatusCode());
             $result->setTitle($htmlParser->extractTitle($response->getBody()->getContents()));
             $result->setHeaders($response->getHeaders());

@@ -45,9 +45,21 @@ class GuzzlePromiseCrawler extends GuzzleCrawler
                 }
                 $urlCollection->delete($index);
             },
-            'rejected' => function ($reason) {
-                // handle promise rejected here
-            }
+            'rejected' =>  function ($exception, $index) use ($urlCollection, $resultCollection, $htmlParser) {
+              $response = $exception->getResponse();
+              $url = $urlCollection->find($index);
+              if ($url !== false) {
+                $resultObject = new Result();
+                $resultObject->setUrl($url);
+                $resultObject->setResponseCode($response->getStatusCode());
+                $resultObject->setTitle($htmlParser->extractTitle($response->getBody()->getContents()));
+                $resultObject->setHeaders($response->getHeaders());
+                $resultObject->setPageSize($response->getBody()->getSize() ?: 0);
+                $resultObject->setBody($response->getBody());
+                $resultCollection->add($resultObject);
+              }
+              $urlCollection->delete($index);
+            },
         ]);
 
         $eachPromise->promise()->wait();
