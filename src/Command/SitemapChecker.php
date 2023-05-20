@@ -5,6 +5,7 @@ namespace Hashbangcode\SitemapChecker\Command;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Hashbangcode\SitemapChecker\Crawler\ChromeCrawler;
+use Hashbangcode\SitemapChecker\Crawler\GuzzleCrawler;
 use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
 use Hashbangcode\SitemapChecker\Parser\SitemapIndexXmlParser;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
@@ -78,6 +79,14 @@ class SitemapChecker extends Command
         if (is_string($sitemap) === FALSE || filter_var($sitemap, FILTER_VALIDATE_URL) === FALSE) {
             $io->error('Invalid sitemap URL found.');
             return Command::INVALID;
+        }
+
+        // Allow for non-sitemap.xml URLs to be passed.
+        if (str_contains($sitemap, 'sitemap.xml') === FALSE) {
+          if (substr($sitemap, -1) === '/') {
+            $sitemap = substr($sitemap, 0, -1);
+          }
+          $sitemap .= '/sitemap.xml';
         }
 
         $client = $this->getClient();
@@ -154,6 +163,8 @@ class SitemapChecker extends Command
         $resultFile = $input->getOption('result-file');
 
         if ($resultFile === NULL) {
+          // Write a blank line to print the results correctly.
+          $output->writeln('');
           foreach ($results as $result) {
               $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getTitle() . ' ' . $result->getResponseCode());
           }
