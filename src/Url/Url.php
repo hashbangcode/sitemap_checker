@@ -2,6 +2,9 @@
 
 namespace Hashbangcode\SitemapChecker\Url;
 
+/**
+ * Class to represent a URL.
+ */
 class Url implements UrlInterface
 {
     protected string $rawUrl;
@@ -13,6 +16,7 @@ class Url implements UrlInterface
 
     public function __construct(string $url)
     {
+        $url = trim($url);
         $this->rawUrl = $url;
         $this->scheme = parse_url($url, PHP_URL_SCHEME) ?: '';
         $this->host = parse_url($url, PHP_URL_HOST) ?: '';

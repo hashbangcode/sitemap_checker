@@ -2,15 +2,25 @@
 
 namespace Hashbangcode\SitemapChecker\Url;
 
+/**
+ * Class to represent a Link.
+ *
+ * This is a Url with some content.
+ */
 class Link extends Url {
 
+  /**
+   * The content of the link.
+   *
+   * @var string
+   */
   protected string $text;
 
   /**
-   * Get the text.
+   * Get the content of the link.
    *
    * @return string
-   *
+   *   The content of the link.
    */
   public function getText()
   {
@@ -18,8 +28,10 @@ class Link extends Url {
   }
 
   /**
+   * Set the content of the link.
+   *
    * @param string $text
-   *   The text.
+   *   The content of the link.
    *
    * @return self
    *   The current object.
