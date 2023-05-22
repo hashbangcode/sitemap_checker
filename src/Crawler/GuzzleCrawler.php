@@ -4,6 +4,7 @@ namespace Hashbangcode\SitemapChecker\Crawler;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use Hashbangcode\SitemapChecker\HtmlParser\HtmlParser;
@@ -29,6 +30,11 @@ class GuzzleCrawler extends CrawlerBase
               $response = $e->getResponse();
             } catch (ServerException $e) {
               $response = $e->getResponse();
+            } catch (ConnectException $e) {
+              // Unable to connect to endpoint.
+              // @todo : find a better way to represent this.
+              $result->setPageSize(0);
+              return $result;
             }
             $result->setResponseCode($response->getStatusCode());
             $result->setTitle($htmlParser->extractTitle($response->getBody()->getContents()));
