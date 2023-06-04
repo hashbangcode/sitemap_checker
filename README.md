@@ -4,6 +4,8 @@ A PHP library used to download, parse and crawl sitemap.xml files.
 
 If the sitemap.xml file is gzipped then the file is unzipped and the contents read.
 
+[![PHP Composer](https://github.com/hashbangcode/sitemap_checker/actions/workflows/php.yml/badge.svg)](https://github.com/hashbangcode/sitemap_checker/actions/workflows/php.yml)
+
 ## Installation
 
 Download the PHP files to a directory and run `composer install`. This will set up everything needed for the application to run.
