@@ -7,7 +7,7 @@ use Hashbangcode\SitemapChecker\Url\UrlInterface;
 interface ResultInterface
 {
 
-    public function getResponseCode(): int;
+    public function getResponseCode(): ?int;
 
     public function getUrl(): UrlInterface;
 

@@ -5,8 +5,10 @@ namespace Hashbangcode\SitemapChecker\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 use Hashbangcode\SitemapChecker\HtmlParser\HtmlParser;
 use Hashbangcode\SitemapChecker\Result\Result;
 use Hashbangcode\SitemapChecker\Result\ResultInterface;
@@ -25,15 +27,16 @@ class GuzzleCrawler extends CrawlerBase
         if ($client instanceof Client) {
             try {
               /** @var \GuzzleHttp\Psr7\Response $response */
-              $response = $client->send($request);
+              $response = $client->send($request, [RequestOptions::ALLOW_REDIRECTS => false]);
             } catch (ClientException $e) {
               $response = $e->getResponse();
             } catch (ServerException $e) {
               $response = $e->getResponse();
             } catch (ConnectException $e) {
-              // Unable to connect to endpoint.
+              // Unable to connect to endpoint due to DNS or other error.
               // @todo : find a better way to represent this.
               $result->setPageSize(0);
+              $result->setResponseCode(0);
               return $result;
             }
             $result->setResponseCode($response->getStatusCode());

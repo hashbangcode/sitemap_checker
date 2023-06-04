@@ -25,4 +25,14 @@ class ResultTest extends TestCase {
       $this->assertEquals('200', $result->getResponseCode());
   }
 
+    public function testAccessingBlankResultProperties() {
+        $result = new Result();
+
+        $this->assertEquals(NULL, $result->getResponseCode());
+        $this->assertEquals([], $result->getHeaders());
+        $this->assertEquals('', $result->getTitle());
+        $this->assertEquals(0, $result->getPageSize());
+        $this->assertEquals('', $result->getBody());
+    }
+
 }

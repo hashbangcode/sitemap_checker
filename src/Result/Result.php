@@ -23,35 +23,35 @@ class Result implements ResultInterface
      *
      * @var int
      */
-    protected int $responseCode;
+    protected ?int $responseCode = null;
 
   /**
    * The headers in the response.
    *
    * @var array<array<string>>
    */
-    protected array $headers;
+    protected array $headers = [];
 
   /**
    * The title of the found page.
    *
    * @var string
    */
-    protected string $title;
+    protected string $title = '';
 
   /**
    * The size of the page.
    *
    * @var int
    */
-    protected int $pageSize;
+    protected int $pageSize = 0;
 
   /**
    * The body.
    *
    * @var string
    */
-    protected string $body;
+    protected string $body = '';
 
     /**
      * Creates a Result object.
@@ -102,7 +102,7 @@ class Result implements ResultInterface
      * @return int
      *   The response code.
      */
-    public function getResponseCode(): int
+    public function getResponseCode(): ?int
     {
         return $this->responseCode;
     }
