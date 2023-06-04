@@ -2,6 +2,7 @@
     "name": "hashbangcode/sitemap_checker",
     "type": "project",
     "license": "MIT",
+    "description": "A PHP library used to download, parse and crawl sitemap.xml files.",
     "autoload": {
         "psr-4": {
             "Hashbangcode\\SitemapChecker\\": "src/"
