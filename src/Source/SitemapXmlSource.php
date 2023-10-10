@@ -17,8 +17,20 @@ class SitemapXmlSource extends SourceBase
         // Ensure the sitemap index detection is initialised to false.
         $this->isSitemapIndex = false;
 
-        $request = new Request('GET', $sourceFile);
-        $response = $this->client->send($request);
+        $headers = [
+            'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
+        ];
+
+        $request = new Request('GET', $sourceFile, $headers);
+
+        // @todo this part needs to be injected.
+        $options = [
+          'auth' => [
+            'test',
+            'test',
+          ]
+        ];
+        $response = $this->client->send($request, $options);
         $body = (string)$response->getBody();
 
         if (0 === mb_strpos($body, "\x1f\x8b\x08")) {

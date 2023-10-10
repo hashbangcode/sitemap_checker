@@ -14,6 +14,9 @@ class ChromeCrawler extends CrawlerBase
     {
         $result = new Result($url);
 
+        // @todo add headers
+        // add cookie additions.
+
         $htmlParser = new HtmlParser();
 
         $browser = $this->getEngine();
