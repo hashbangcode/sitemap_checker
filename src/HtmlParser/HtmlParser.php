@@ -43,8 +43,8 @@ class HtmlParser implements HtmlParserInterface
    * @return array['url' => string, 'link' => string]
    *   The list of found links.
    */
-  public function extractLinks(string $data, string $rootUrl):array {
-//    * @return array['url' => string, 'link' => string]
+  public function extractLinks(string $data, string $rootUrl):array
+  {
     // The base URL.
     $baseUrl = '';
 

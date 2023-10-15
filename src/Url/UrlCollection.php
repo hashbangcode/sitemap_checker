@@ -43,7 +43,7 @@ class UrlCollection implements UrlCollectionInterface
 
     public function valid(): bool
     {
-        return !is_null(key($this->urls));
+        return !(null === key($this->urls));
     }
 
     public function rewind(): void
