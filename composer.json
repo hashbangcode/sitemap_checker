@@ -28,7 +28,7 @@
         "symfony/config": "^6.2",
         "symfony/dependency-injection": "^6.2",
         "symfony/yaml": "^6.2",
-        "guzzlehttp/promises": "^1.5",
+        "guzzlehttp/promises": "^2.0",
         "symfony/framework-bundle": "^6.2",
         "chrome-php/chrome": "^1.8"
     },
