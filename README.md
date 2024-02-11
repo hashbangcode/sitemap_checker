@@ -73,17 +73,42 @@ For the coverage report you need to add the following to your xdebug.ini configu
 xdebug.mode=coverage
 ```
 
+## Example Using Classes
+
+To extract the classes out of this project to use independently do the following.
+
+```php
+<?php
+
+use Hashbangcode\SitemapChecker\Crawler\GuzzlePromiseCrawler;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// Set the engine up.
+$client = new \GuzzleHttp\Client();
+$crawler = new \Hashbangcode\SitemapChecker\Crawler\GuzzleCrawler();
+$crawler->setEngine($client);
+
+// Create a URL.
+$url = new \Hashbangcode\SitemapChecker\Url\Url('https://www.hashbangcode.com/');
+
+// Crawl a single URL.
+$result = $crawler->processUrl($url);
+
+// Print result object.
+print_r($result);
+
+```
+
 ## To Do
 
-- Add exclusion rules to prevent certain URLs from being checked.
-- Add limits to visit only a certain amount of links.
-- Add ability to add basic authentication.
-- Better results presenting. Render as HTML, XML, json etc.
-- Add a way to auto-download the chrome download.
-- Look at using a database.
-- Add Docker container to wrap application.
-- Batching processing of urls.
-- Pick better name for application.
-- Pull out the links from within the content of the site.
-- Add ability to add session cookies for authenticated spidering.
+There's still lots to do.
 
+- Add exclusion rules to prevent certain URLs from being checked.
+- Better results presenting. Render as HTML, XML, json etc.
+- Add a way to auto-download the Chrome binary.
+- Look into using a database or message queue.
+- Add Docker container to wrap application.
+- Batching processing of urls (i.e. don't do everything in one go).
+- Pick better name for application.
+- Add ability to add session cookies for authenticated spidering.
