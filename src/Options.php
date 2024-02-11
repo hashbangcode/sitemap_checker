@@ -19,14 +19,14 @@ class Options implements OptionsInterface {
   /**
    * The authorisation header, if set.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $authorization = null;
+  protected string $authorization = '';
 
   /**
    * Any headers needed to be sent to the endpoint.
    *
-   * @var array
+   * @var array<string, string>
    */
   protected array $headers = [];
 
@@ -49,18 +49,24 @@ class Options implements OptionsInterface {
   }
 
   /**
-   * @return string|null
+   * @return string
    */
-  public function getAuthorization(): ?string
+  public function getAuthorization(): string
   {
     return $this->authorization;
   }
 
+  public function setAuthorizationDetails(string $username, string $password): Options
+  {
+    $this->setAuthorization(sprintf('Basic %s', base64_encode($username . ':' . $password)));
+    return $this;
+  }
+
   /**
-   * @param string|null $authorization
+   * @param string $authorization
    * @return Options
    */
-  public function setAuthorization(?string $authorization): Options
+  public function setAuthorization(string $authorization): Options
   {
     $this->authorization = $authorization;
     return $this;
@@ -68,14 +74,14 @@ class Options implements OptionsInterface {
 
   public function hasAuthorization(): bool
   {
-    if (null === $this->authorization) {
+    if ('' === $this->authorization) {
       return false;
     }
     return true;
   }
 
   /**
-   * @return array
+   * @return array<string, string>
    */
   public function getHeaders(): array
   {
@@ -83,7 +89,8 @@ class Options implements OptionsInterface {
   }
 
   /**
-   * @param array $headers
+   * @param array<string, string> $headers
+   *
    * @return Options
    */
   public function setHeaders(array $headers): Options

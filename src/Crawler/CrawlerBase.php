@@ -2,6 +2,7 @@
 
 namespace Hashbangcode\SitemapChecker\Crawler;
 
+use Hashbangcode\SitemapChecker\InjectOptions;
 use Hashbangcode\SitemapChecker\Options;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\Result\ResultCollectionInterface;
@@ -9,12 +10,7 @@ use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 abstract class CrawlerBase implements CrawlerInterface
 {
-    /**
-     * The crawler options.
-     *
-     * @var Options
-     */
-    protected $options = null;
+    use InjectOptions;
 
     protected mixed $engine = null;
 
@@ -27,28 +23,6 @@ abstract class CrawlerBase implements CrawlerInterface
     public function getEngine(): mixed
     {
         return $this->engine;
-    }
-
-    /**
-     * @return Options
-     */
-    public function getOptions(): Options
-    {
-      if (null === $this->options) {
-        $this->options = new Options();
-      }
-      return $this->options;
-    }
-
-    /**
-     * @param Options $options
-     *
-     * @return self
-     */
-    public function setOptions(Options $options): CrawlerBase
-    {
-      $this->options = $options;
-      return $this;
     }
 
     public function crawl(UrlCollectionInterface $urlCollection): ResultCollectionInterface

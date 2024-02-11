@@ -3,6 +3,7 @@
 namespace Hashbangcode\SitemapChecker\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Psr7\Response;
@@ -22,7 +23,7 @@ class GuzzlePromiseCrawler extends GuzzleCrawler
      */
     protected $cookieJar = null;
 
-    public function getCookieJar() {
+    public function getCookieJar():?CookieJarInterface {
       if ($this->cookieJar === null) {
         $this->cookieJar = new \GuzzleHttp\Cookie\CookieJar();
       }

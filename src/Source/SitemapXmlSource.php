@@ -3,9 +3,12 @@
 namespace Hashbangcode\SitemapChecker\Source;
 
 use GuzzleHttp\Psr7\Request;
+use Hashbangcode\SitemapChecker\InjectOptions;
 
 class SitemapXmlSource extends SourceBase
 {
+    use InjectOptions;
+
     protected bool $isSitemapIndex = false;
 
     public function isSitemapIndex():bool {
@@ -17,19 +20,15 @@ class SitemapXmlSource extends SourceBase
         // Ensure the sitemap index detection is initialised to false.
         $this->isSitemapIndex = false;
 
-        $headers = [
-            'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
-        ];
+        $headers['User-Agent'] = $this->getOptions()->getUserAgent();
 
         $request = new Request('GET', $sourceFile, $headers);
 
-        // @todo this part needs to be injected.
-        $options = [
-          'auth' => [
-            'test',
-            'test',
-          ]
-        ];
+        $options = [];
+        if ($this->getOptions()->hasAuthorization()) {
+           $options['Authorization'] = $this->getOptions()->getAuthorization();
+        }
+
         $response = $this->client->send($request, $options);
         $body = (string)$response->getBody();
 

@@ -3,6 +3,8 @@
 namespace Hashbangcode\SitemapChecker\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -22,7 +24,7 @@ class GuzzleCrawler extends CrawlerBase
      */
     protected $cookieJar = null;
 
-    public function getCookieJar()
+    public function getCookieJar():?CookieJarInterface
     {
       if ($this->cookieJar === null) {
         $this->cookieJar = new \GuzzleHttp\Cookie\CookieJar();
@@ -69,7 +71,6 @@ class GuzzleCrawler extends CrawlerBase
               $response = $e->getResponse();
             } catch (ConnectException $e) {
               // Unable to connect to endpoint due to DNS or other error.
-              // @todo : find a better way to represent this.
               $result->setPageSize(0);
               $result->setResponseCode(0);
               return $result;
