@@ -121,6 +121,7 @@ class SitemapChecker extends Command
         }
 
         if ($limit !== -1) {
+          $output->writeln('Limiting to ' . $limit);
           if (is_int($limit) === TRUE) {
             $listChunks = $list->chunk($limit);
             $list = $listChunks[0];

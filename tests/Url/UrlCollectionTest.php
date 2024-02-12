@@ -25,10 +25,13 @@ class UrlCollectionTest extends TestCase
     $this->assertEquals(1, $urlCollection->key());
     $this->assertEquals('/inner-path', $urlCollection->current()->getPath());
 
+    $collectionCount = 0;
     foreach ($urlCollection as $id => $url) {
+      $collectionCount++;
         $this->assertInstanceOf(Url::class, $url);
         $this->assertEquals($id, $urlCollection->key());
     }
+    $this->assertEquals(2, $collectionCount);
 
     $urlCollection->delete(1);
     $this->assertEquals($urlCollection->count(), 1);

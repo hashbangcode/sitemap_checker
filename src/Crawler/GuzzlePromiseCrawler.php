@@ -3,6 +3,7 @@
 namespace Hashbangcode\SitemapChecker\Crawler;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\Psr7\Response;
@@ -16,14 +17,40 @@ use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 class GuzzlePromiseCrawler extends GuzzleCrawler
 {
+
+    /**
+     * @var \GuzzleHttp\Cookie\CookieJarInterface|null
+     */
+    protected $cookieJar = null;
+
+    public function getCookieJar():?CookieJarInterface {
+      if ($this->cookieJar === null) {
+        $this->cookieJar = new \GuzzleHttp\Cookie\CookieJar();
+      }
+      return $this->cookieJar;
+    }
+
     public function crawl(UrlCollectionInterface $urlCollection): ResultCollectionInterface
     {
-        // Use a generator to create the .
-        $promises = (function () use ($urlCollection) {
+        $headers = $this->getOptions()->getHeaders();
+        $headers['User-Agent'] = $this->getOptions()->getUserAgent();
+
+        if ($this->getOptions()->hasAuthorization()) {
+          $headers['Authorization'] = $this->getOptions()->getAuthorization();
+        }
+
+        // Use a generator to create the request.
+        $promises = (function () use ($urlCollection, $headers) {
             foreach ($urlCollection as $url) {
                 $client = $this->getEngine();
                 if ($client instanceof Client) {
-                    yield $client->getAsync($url->getRawUrl(), [RequestOptions::ALLOW_REDIRECTS => false]);
+                    // @todo the first request should add the header auth to the cookie jar.
+                    $options = [
+                        RequestOptions::ALLOW_REDIRECTS => false,
+                        $headers,
+                        'cookies' => $this->getCookieJar(),
+                    ];
+                    yield $client->getAsync($url->getRawUrl(), $options);
                 }
             }
         })();

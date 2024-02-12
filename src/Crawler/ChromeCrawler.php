@@ -19,6 +19,15 @@ class ChromeCrawler extends CrawlerBase
         $browser = $this->getEngine();
         if ($browser instanceof ProcessAwareBrowser) {
             $page = $browser->createPage();
+            $options = $this->getOptions();
+
+            $headers = $options->getHeaders();
+            $headers['Authorization'] = $options->getAuthorization();
+            array_filter($headers);
+            if (count($headers) !== 0) {
+              $page->setExtraHTTPHeaders($headers);
+            }
+
             $page->getSession()->on("method:Network.responseReceived", function (array $params) use ($result): void {
                 $result->setResponseCode($params['response']['status']);
                 foreach ($params['response']['headers'] as $id => $header) {
