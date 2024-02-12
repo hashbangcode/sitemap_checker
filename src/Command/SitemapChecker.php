@@ -71,7 +71,7 @@ class SitemapChecker extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemap = $input->getArgument('sitemap');
-        $limit = $input->getOption('limit');
+        $limit = (int) $input->getOption('limit');
         $engine = $input->getOption('engine');
 
         $io = new SymfonyStyle($input, $output);
