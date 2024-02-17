@@ -11,6 +11,10 @@ use Hashbangcode\SitemapChecker\Parser\SitemapIndexXmlParser;
 use Hashbangcode\SitemapChecker\Parser\SitemapXmlParser;
 use Hashbangcode\SitemapChecker\Result\ResultCollection;
 use Hashbangcode\SitemapChecker\ResultRender\CsvResultRender;
+use Hashbangcode\SitemapChecker\ResultRender\JsonResultRender;
+use Hashbangcode\SitemapChecker\ResultRender\PlainResultRender;
+use Hashbangcode\SitemapChecker\ResultRender\HtmlResultRender;
+use Hashbangcode\SitemapChecker\ResultRender\XmlResultRender;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
 use Hashbangcode\SitemapChecker\Url\UrlCollection;
 use HeadlessChromium\BrowserFactory;
@@ -165,14 +169,31 @@ class SitemapChecker extends Command
 
         if ($resultFile === NULL) {
           // Write a blank line to print the results correctly.
+          $resultRender = new PlainResultRender();
           $output->writeln('');
-          foreach ($results as $result) {
-              $output->writeln($result->getUrl()->getRawUrl() . ' ' . $result->getTitle() . ' ' . $result->getResponseCode());
-          }
+          $output->writeln($resultRender->render($results));
         }
         elseif (is_string($resultFile) && str_contains($resultFile, '.csv')) {
           $io->info('Writing CSV file.');
           $resultRender = new CsvResultRender();
+          $renderedResult = $resultRender->render($results);
+          file_put_contents($resultFile, $renderedResult);
+        }
+        elseif (is_string($resultFile) && str_contains($resultFile, '.json')) {
+          $io->info('Writing JSON file.');
+          $resultRender = new JsonResultRender();
+          $renderedResult = $resultRender->render($results);
+          file_put_contents($resultFile, $renderedResult);
+        }
+        elseif (is_string($resultFile) && str_contains($resultFile, '.xml')) {
+          $io->info('Writing XML file.');
+          $resultRender = new XmlResultRender();
+          $renderedResult = $resultRender->render($results);
+          file_put_contents($resultFile, $renderedResult);
+        }
+        elseif (is_string($resultFile) && str_contains($resultFile, '.html')) {
+          $io->info('Writing HTML file.');
+          $resultRender = new HtmlResultRender();
           $renderedResult = $resultRender->render($results);
           file_put_contents($resultFile, $renderedResult);
         }
