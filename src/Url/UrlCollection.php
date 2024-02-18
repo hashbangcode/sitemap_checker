@@ -9,9 +9,32 @@ class UrlCollection implements UrlCollectionInterface
      */
     protected array $urls = [];
 
+    /**
+     * Rules for excluding URLs from the collection.
+     *
+     * @var array<string>
+     */
+    protected array $exclusionRules = [];
+
     public function add(UrlInterface $url): void
     {
+      if (count($this->exclusionRules) === 0) {
+        // There are no exclusion rules, so add the URL and return.
         $this->urls[] = $url;
+        return;
+      }
+
+      foreach ($this->exclusionRules as $rule) {
+        // Perform a like for like match.
+        if ($url->getRawUrl() === $rule) {
+          return;
+        }
+        // Perform a wildcard match.
+        if (str_contains($rule, '*') && preg_match('/^' . $rule . '/i', $url->getRawUrl()) > 0) {
+          return;
+        }
+      }
+      $this->urls[] = $url;
     }
 
     public function delete(int $index): void
@@ -75,4 +98,26 @@ class UrlCollection implements UrlCollectionInterface
         return $collections;
     }
 
+  /**
+   * {@inheritDoc}
+   */
+    public function setExclusionRules(array $exclusionRules): self
+    {
+      foreach ($exclusionRules as &$rule) {
+        if (str_contains($rule, '*')) {
+          $rule = preg_quote($rule, '/');
+          $rule = str_replace('\*', '.*', $rule);
+        }
+      }
+      $this->exclusionRules = $exclusionRules;
+      return $this;
+    }
+
+  /**
+   * {@inheritDoc}
+   */
+    public function getExclusionRules(): array
+    {
+      return $this->exclusionRules;
+    }
 }

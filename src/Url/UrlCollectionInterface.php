@@ -7,16 +7,29 @@ namespace Hashbangcode\SitemapChecker\Url;
  */
 interface UrlCollectionInterface extends \Iterator, \Countable
 {
-    public function add(UrlInterface $url): void;
+  public function add(UrlInterface $url): void;
 
-    public function delete(int $index): void;
+  public function delete(int $index): void;
 
-    public function find(int $id) : UrlInterface|false;
+  public function find(int $id): UrlInterface|false;
 
   /**
    * @param int $chunkLength
    *
    * @return UrlCollectionInterface[]
    */
-  public function chunk(int $chunkLength) : array;
+  public function chunk(int $chunkLength): array;
+
+  /**
+   * @param array<string> $exclusionRules
+   *
+   * @return self
+   */
+  public function setExclusionRules(array $exclusionRules): self;
+
+  /**
+   * @return array<string>
+   */
+  public function getExclusionRules(): array;
+
 }

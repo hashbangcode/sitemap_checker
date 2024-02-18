@@ -28,4 +28,19 @@ class SitemapXmlParserTest extends TestCase
     $this->assertEquals('/inner-link', $list->current()->getPath());
   }
 
+  public function testSitemapParserParsesDataAndAdheredToExclusionRules()
+  {
+    $sitemapXml = realpath(__DIR__ . '/../data/sitemap.xml');
+    $sitemapXml = file_get_contents($sitemapXml);
+
+    $sitemapXmlParser = new SitemapXmlParser();
+
+    $exclusionRules = [
+      'https://www.example.com/inner-link'
+    ];
+
+    $list = $sitemapXmlParser->parse($sitemapXml, $exclusionRules);
+
+    $this->assertEquals(1, $list->count());
+  }
 }

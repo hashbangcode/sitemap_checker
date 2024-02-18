@@ -6,5 +6,10 @@ use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 interface ParserInterface
 {
-    public function parse(string $data): UrlCollectionInterface;
+    /**
+     * @param string $data
+     * @param array<string> $exclusionRules
+     * @return UrlCollectionInterface
+     */
+    public function parse(string $data, array $exclusionRules = []): UrlCollectionInterface;
 }
