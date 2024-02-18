@@ -13,13 +13,13 @@ class XmlResultRender implements ResultRenderInterface {
       $resultXml = $xml->addChild('result');
       $resultXml->addChild('url', $result->getUrl()->getRawUrl());
       $resultXml->addChild('title', $result->getTitle());
-      $resultXml->addChild('response_code', $result->getResponseCode());
+      $resultXml->addChild('response_code', (string) $result->getResponseCode());
       if ($result->getPageSize() > 0) {
-        $resultXml->addChild('page_size', $result->getPageSize());
+        $resultXml->addChild('page_size', (string) $result->getPageSize());
       }
     }
 
-    return $xml->asXML();
+    return $xml->asXML() ?: '';
   }
 
 

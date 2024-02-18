@@ -20,7 +20,7 @@ class JsonResultRender implements ResultRenderInterface {
       }
       $array[] = $item;
     }
-    return json_encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);;
+    return json_encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK) ?: '';
   }
 
 
