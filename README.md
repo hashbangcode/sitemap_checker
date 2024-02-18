@@ -131,8 +131,6 @@ print_r($result);
 
 There's still lots to do.
 
-- Add exclusion rules to prevent certain URLs from being checked.
-- Better results presenting. Render as HTML, XML, json etc.
 - Add a way to auto-download the Chrome binary.
 - Look into using a database or message queue.
 - Add Docker container to wrap application.
