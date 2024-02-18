@@ -32,13 +32,20 @@ A number of options exist for this tool.
 
 To change what type of result is returned you can supply the `--result-file` option, or `-r` for short.
 
+The following rendering types are available:
+- Plain, the default renderer (prints the results line by line).
+- CSV
+- JSON
+- XML
+- HTML
+
 For example, to output the results as a csv you can supply the option like this. 
 
 `php application.php sc:run -r results.csv https://www.example.com/sitemap.xml`
 
 This will automatically trigger the csv result rendering pathway and render the results as a csv file.
 
-Without this option in place the tool will print results to the command line.
+Without this option in place the tool will print results to the command line using "plain" rendering.
 
 ### Limit
 
