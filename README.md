@@ -55,18 +55,38 @@ For example, this will only process 10 results, regardless of the number of URLs
 
 `php application.php sc:run -l 10 https://www.example.com/sitemap.xml`
 
-### engine
+### Engine
 
 The `--engine` option (or `-e` for short) changes the type of checking engine used.
 
 Options are:
 - 'guzzle' : (Default) Run the sitemap checker using Guzzle promises.
 - 'chrome' : Run the sitemap checker using headless Chrome. To get this running you'll first need to add the
-chrome binary to the location `./chrome/chrome`.
+chrome binary to the location `./chrome/chrome` (i.e. within the package).
 
 For example, to change the sitemap checker engine to use headless Chrome use the following.
 
 `php application.php sc:run -e chrome https://www.example.com/sitemap.xml`
+
+### Exclude
+
+Pass a list of URLs to exclude using the `--exclude` (or `-x` for short) flag. This will prevent URLs from being added
+to the collections and checked. This can be a comma separated list of URLs to exclude. Wildcards can also be used to
+prevent certain inner URLs from being used.
+
+Some examples:
+
+To prevent the path `https://www.example.com/some-page` being used.
+
+`php application.php sc:run https://www.example.com/ --exclude='https://www.hashbangcode.com/some-page.html'`
+
+To prevent anything in `https://www.example.com/sub-dir1` and `https://www.example.com/sub-dir2` from being used:
+
+`php application.php sc:run https://www.example.com/ --exclude='https://www.example.com/sub-dir1/*,https://www.hashbangcode.com/sub-dir2/*'`
+
+To prevent anything on the external site `https://www.example2.org` being used.
+
+`php application.php sc:run https://www.example.com/ --exclude='https://www.example2.org/*'`
 
 ## Testing
 

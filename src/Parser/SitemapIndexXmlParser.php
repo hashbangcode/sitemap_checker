@@ -8,9 +8,13 @@ use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 class SitemapIndexXmlParser extends ParserBase
 {
-    public function parse(string $data): UrlCollectionInterface
+    public function parse(string $data, array $exclusionRules = []): UrlCollectionInterface
     {
         $linkCollection = new UrlCollection();
+
+        if (count($exclusionRules) > 0) {
+          $linkCollection->setExclusionRules($exclusionRules);
+        }
 
         $xml = simplexml_load_string($data, null, LIBXML_NOWARNING | LIBXML_NOERROR);
 

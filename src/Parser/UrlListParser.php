@@ -8,9 +8,13 @@ use Hashbangcode\SitemapChecker\Url\UrlCollectionInterface;
 
 class UrlListParser extends ParserBase
 {
-    public function parse(string $data): UrlCollectionInterface
+    public function parse(string $data, array $exclusionRules = []): UrlCollectionInterface
     {
         $linkCollection = new UrlCollection();
+
+        if (count($exclusionRules) > 0) {
+           $linkCollection->setExclusionRules($exclusionRules);
+        }
 
         $lines = preg_split("/\r\n|\n|\r/", $data);
 

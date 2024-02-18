@@ -70,13 +70,25 @@ class SitemapChecker extends Command
         $this->addOption('result-file', 'r',  InputOption::VALUE_OPTIONAL, 'The output file.');
         $this->addOption('limit', 'l',  InputOption::VALUE_OPTIONAL, 'Limit the number of URLs polled.', -1);
         $this->addOption('engine', 'e',  InputOption::VALUE_OPTIONAL, 'The engine to use, defaults to guzzle.', 'guzzle');
+        $this->addOption('exclude', 'x', InputOption::VALUE_OPTIONAL, 'A set of URLs to exclude.', '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemap = $input->getArgument('sitemap');
-        $limit = (int) $input->getOption('limit');
+        $limit = $input->getOption('limit');
+        if (is_numeric($limit)) {
+          $limit = (int) $limit;
+        }
         $engine = $input->getOption('engine');
+
+        $exclude = $input->getOption('exclude');
+        if (is_string($exclude)) {
+          $exclude = array_filter(explode(',', $exclude));
+        }
+        else {
+          $exclude = [];
+        }
 
         $io = new SymfonyStyle($input, $output);
 
@@ -111,6 +123,10 @@ class SitemapChecker extends Command
 
           $list = new UrlCollection();
 
+          if (count($exclude) > 0) {
+            $list->setExclusionRules($exclude);
+          }
+
           foreach ($sitemapList as $sitemapUrl) {
             $sitemapData = $sitemapSource->fetch($sitemapUrl->getRawUrl());
             $sitemapParser = new SitemapXmlParser();
@@ -121,7 +137,12 @@ class SitemapChecker extends Command
           }
         } else {
           $sitemapParser = new SitemapXmlParser();
-          $list = $sitemapParser->parse($sitemapData);
+          $list = $sitemapParser->parse($sitemapData, $exclude);
+        }
+
+        if ($list->count() === 0) {
+          $output->writeln('No URLs found.');
+          return Command::SUCCESS;
         }
 
         if ($limit !== -1) {
