@@ -3,6 +3,7 @@
 namespace Hashbangcode\SitemapChecker\Source;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Request;
 
 abstract class SourceBase implements SourceInterface
 {
@@ -15,4 +16,11 @@ abstract class SourceBase implements SourceInterface
     {
         $this->client = $client;
     }
+
+  public function fetch(string $sourceFile): string
+  {
+    $request = new Request('GET', $sourceFile);
+    $response = $this->client->send($request);
+    return (string) $response->getBody();
+  }
 }
