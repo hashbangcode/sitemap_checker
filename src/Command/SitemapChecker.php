@@ -15,6 +15,8 @@ use Hashbangcode\SitemapChecker\ResultRender\JsonResultRender;
 use Hashbangcode\SitemapChecker\ResultRender\PlainResultRender;
 use Hashbangcode\SitemapChecker\ResultRender\HtmlResultRender;
 use Hashbangcode\SitemapChecker\ResultRender\XmlResultRender;
+use Hashbangcode\SitemapChecker\RobotsTxtParser;
+use Hashbangcode\SitemapChecker\Source\RobotsTxtSource;
 use Hashbangcode\SitemapChecker\Source\SitemapXmlSource;
 use Hashbangcode\SitemapChecker\Url\UrlCollection;
 use HeadlessChromium\BrowserFactory;
@@ -70,7 +72,8 @@ class SitemapChecker extends Command
         $this->addOption('result-file', 'r',  InputOption::VALUE_OPTIONAL, 'The output file.');
         $this->addOption('limit', 'l',  InputOption::VALUE_OPTIONAL, 'Limit the number of URLs polled.', -1);
         $this->addOption('engine', 'e',  InputOption::VALUE_OPTIONAL, 'The engine to use, defaults to guzzle.', 'guzzle');
-        $this->addOption('exclude', 'x', InputOption::VALUE_OPTIONAL, 'A set of URLs to exclude.', '');
+        $this->addOption('exclude', 'x', InputOption::VALUE_OPTIONAL, 'A set of URLs to exclude.');
+        $this->addOption('robots', 't', InputOption::VALUE_OPTIONAL, 'A robots.txt file to download and use as exclusion fules.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -92,6 +95,8 @@ class SitemapChecker extends Command
 
         $io = new SymfonyStyle($input, $output);
 
+        $robots = $input->getOption('robots');
+
         if (is_string($sitemap) === FALSE || filter_var($sitemap, FILTER_VALIDATE_URL) === FALSE) {
             $io->error('Invalid sitemap URL found.');
             return Command::INVALID;
@@ -106,6 +111,19 @@ class SitemapChecker extends Command
         }
 
         $client = $this->getClient();
+
+        // Include the robots.txt file exclusion rules.
+        if (is_string($robots)) {
+            if (filter_var($sitemap, FILTER_VALIDATE_URL) === FALSE) {
+                $io->error('Invalid robots.txt URL passed.');
+                return Command::INVALID;
+            }
+            $robotsTxtSource = new RobotsTxtSource($client);
+            $robotsTxt = $robotsTxtSource->fetch($robots);
+            $robotsTxtParse = new RobotsTxtParser();
+            $robotsTxtRules = $robotsTxtParse->parse($robotsTxt, str_replace('/sitemap.xml', '', $sitemap));
+            $exclude = array_merge($exclude, $robotsTxtRules);
+        }
 
         $sitemapSource = new SitemapXmlSource($client);
         try {

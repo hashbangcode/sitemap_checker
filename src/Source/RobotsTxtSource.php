@@ -2,6 +2,6 @@
 
 namespace Hashbangcode\SitemapChecker\Source;
 
-class UrlListSource extends SourceBase {
-
+class RobotsTxtSource extends SourceBase
+{
 }

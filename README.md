@@ -88,6 +88,17 @@ To prevent anything on the external site `https://www.example2.org` being used.
 
 `php application.php sc:run https://www.example.com/ --exclude='https://www.example2.org/*'`
 
+### Robots
+
+Pass a robots.txt file to the script using `--robots` (or `-t` for short). This will download and parse the robots.txt
+file into a set of exclusion rules.
+
+`php application.php sc:run https://www.example.com/ --robots='https://www.example.org/robots.txt'`
+
+Note that the robots.txt parser will only use rules that have been created for the `User-agent` string `*`.
+
+This option can be used in conjunction with the exclude flag to add to the spider exclusion rules.
+
 ## Testing
 
 Run `./vendor/bin/phpunit` to run the phpunit tests. All web requests are mocked within the unit tests.
