@@ -54,3 +54,6 @@ vendor
 .build
 .phpunit.result.cache
 var/
+
+# Project files
+chrome/
