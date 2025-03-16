@@ -76,7 +76,7 @@ class SitemapChecker extends Command
         $this->addOption('robots', 't', InputOption::VALUE_OPTIONAL, 'A robots.txt file to download and use as exclusion fules.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output):int
     {
         $sitemap = $input->getArgument('sitemap');
         $limit = $input->getOption('limit');
