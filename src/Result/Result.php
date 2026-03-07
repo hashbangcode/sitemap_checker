@@ -25,41 +25,46 @@ class Result implements ResultInterface
      */
     protected ?int $responseCode = null;
 
-  /**
-   * The headers in the response.
-   *
-   * @var array<array<string>>
-   */
+    /**
+     * The headers in the response.
+     *
+     * @var array<array<string>>
+     */
     protected array $headers = [];
 
-  /**
-   * The title of the found page.
-   *
-   * @var string
-   */
+    /**
+     * The title of the found page.
+     *
+     * @var string
+     */
     protected string $title = '';
 
-  /**
-   * The size of the page.
-   *
-   * @var int
-   */
+    /**
+     * The size of the page.
+     *
+     * @var int
+     */
     protected int $pageSize = 0;
 
-  /**
-   * The body.
-   *
-   * @var string
-   */
+    /**
+     * The body.
+     *
+     * @var string
+     */
     protected string $body = '';
+
+    /**
+     * @var mixed
+     */
+    protected mixed $screenshotFileData = '';
 
     /**
      * Creates a Result object.
      *
-     * @param UrlInterface $url
+     * @param UrlInterface|null $url
      *   The Url object.
      */
-    public function __construct(UrlInterface $url = NULL)
+    public function __construct(?UrlInterface $url = NULL)
     {
         if ($url !== NULL) {
             $this->url = $url;
@@ -118,57 +123,86 @@ class Result implements ResultInterface
         return $this->url;
     }
 
-  public function getHeaders(): array
-  {
-    return $this->headers;
-  }
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
 
-  public function setHeaders(array $headers)
-  {
-    $this->headers = $headers;
-  }
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
+    }
 
-  public function setTitle(string $title):self
-  {
-    $this->title = $title;
-    return $this;
-  }
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
 
-  public function getTitle(): string
-  {
-    return $this->title;
-  }
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function getPageSize(): int
-  {
-    return $this->pageSize;
-  }
+    /**
+     * @inheritDoc
+     */
+    public function getPageSize(): int
+    {
+        return $this->pageSize;
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function setPageSize(int $pageSize): self
-  {
-    $this->pageSize = $pageSize;
-    return $this;
-  }
+    /**
+     * @inheritDoc
+     */
+    public function setPageSize(int $pageSize): self
+    {
+        $this->pageSize = $pageSize;
+        return $this;
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function getBody(): string {
-    return $this->body;
-  }
+    /**
+     * @inheritDoc
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
 
-  /**
-   * @inheritDoc
-   */
-  public function setBody(string $body): self {
-    $this->body = $body;
-    return $this;
-  }
+    /**
+     * @inheritDoc
+     */
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+        return $this;
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function getScreenshotFileData(): mixed
+    {
+        return $this->screenshotFileData;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setScreenshotFileData(mixed $screenshotFileData): self
+    {
+        $this->screenshotFileData = $screenshotFileData;
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        $string = 'URL: ' . $this->getUrl()->rebuildUrl() . PHP_EOL;
+        $string .= 'Title: ' . $this->getTitle() . PHP_EOL;
+        $string .= 'Response Code: ' . $this->getResponseCode() . PHP_EOL;
+        $string .= 'Page Size: ' . $this->getPageSize() . PHP_EOL;
+        $string .= 'Headers: ' . print_r($this->getHeaders(), true) . PHP_EOL;
+        $string .= 'Body: ' . PHP_EOL . $this->getBody() . PHP_EOL;
+        return $string;
+    }
 }

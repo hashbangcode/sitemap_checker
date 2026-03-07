@@ -30,6 +30,7 @@ class GuzzleCrawlerTest extends TestCase {
     $urlCollection->add(new Url('https://www.example.com/'));
 
     $guzzleCrawler = new GuzzleCrawler();
+    $this->assertFalse($guzzleCrawler->canTakeScreenshot());
     $guzzleCrawler->setEngine($httpClient);
     $resultsCollection = $guzzleCrawler->crawl($urlCollection);
     $this->assertEquals(200, $resultsCollection->current()->getResponseCode());
