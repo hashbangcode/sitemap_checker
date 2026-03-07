@@ -39,7 +39,7 @@ $result = $crawler->processUrl($url);
 if ($crawler->getScreenshotType() == ChromeCrawler::SCREENSHOT_TYPE_DATA) {
     $fileData = $result->getScreenshotFileData();
     if (is_string($fileData) && $fileData !== '') {
-        file_put_contents($fileData, $url->generateHash() . '.png');
+        file_put_contents($url->generateHash() . '.png', file_get_contents('data:image/png;base64,' . $fileData));
     }
 }
 
