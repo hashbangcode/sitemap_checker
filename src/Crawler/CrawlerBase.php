@@ -25,6 +25,10 @@ abstract class CrawlerBase implements CrawlerInterface
         return $this->engine;
     }
 
+    public function canTakeScreenshot(): bool {
+        return false;
+    }
+
     public function crawl(UrlCollectionInterface $urlCollection): ResultCollectionInterface
     {
         $resultCollection = new ResultCollection();

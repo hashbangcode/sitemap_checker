@@ -11,6 +11,7 @@ use HeadlessChromium\Communication\Session;
 use HeadlessChromium\Page;
 use HeadlessChromium\PageUtils\PageEvaluation;
 use HeadlessChromium\PageUtils\PageNavigation;
+use HeadlessChromium\PageUtils\PageScreenshot;
 use PHPUnit\Framework\TestCase;
 
 
@@ -51,9 +52,64 @@ class ChromeCrawlerTest extends TestCase {
     $urlCollection->add(new Url('https://www.example.com/'));
 
     $chromeCrawler = new ChromeCrawler();
+    $this->assertTrue($chromeCrawler->canTakeScreenshot());
     $chromeCrawler->setEngine($browser);
     $resultsCollection = $chromeCrawler->crawl($urlCollection);
     $this->assertEquals(1, $resultsCollection->count());
+    $browser->close();
+  }
+
+  public function testChromeScreenshotData() {
+    $browser = $this->getMockBuilder(ProcessAwareBrowser::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $page = $this->getMockBuilder(Page::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $pageNavigation = $this->getMockBuilder(PageNavigation::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $page->method('navigate')->willReturn($pageNavigation);
+
+    $session = $this->getMockBuilder(Session::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $page->method('getSession')->willReturn($session);
+
+    $pageEvaluation = $this->getMockBuilder(PageEvaluation::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $pageScreenshot = $this->getMockBuilder(PageScreenshot::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $pageEvaluation->method('getReturnValue')->willReturn('<html><title>Title</title><body></body></html>');
+
+    $page->method('evaluate')->willReturn($pageEvaluation);
+
+    $pageScreenshot->method('getBase64')->willReturn('string');
+    $page->method('screenshot')->willReturn($pageScreenshot);
+
+    $browser->method('createPage')->willReturn($page);
+
+    $url = new Url('https://www.example.com/');
+
+    $chromeCrawler = new ChromeCrawler();
+    $this->assertTrue($chromeCrawler->canTakeScreenshot());
+
+    $chromeCrawler->setTakeScreenshot(true);
+    $chromeCrawler->setScreenshotType(ChromeCrawler::SCREENSHOT_TYPE_DATA);
+    $chromeCrawler->setEngine($browser);
+
+    $result = $chromeCrawler->processUrl($url);
+
+    $this->assertIsString($result->getScreenshotFileData());
+
     $browser->close();
   }
 }

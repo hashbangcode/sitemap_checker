@@ -54,7 +54,7 @@ class SitemapCheckerTest extends KernelTestCase
         $command = $application->find('sitemap-checker:run');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'sitemap' => 'https://www.example.com/sitemap.xml'
+            'sitemap' => 'http://www.example.com/sitemap.xml'
         ]);
         $this->assertInstanceOf(Client::class, $command->getClient());
     }

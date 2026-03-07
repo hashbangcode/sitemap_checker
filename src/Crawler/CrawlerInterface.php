@@ -16,4 +16,7 @@ interface CrawlerInterface
     public function crawl(UrlCollectionInterface $urlCollection): ResultCollectionInterface;
 
     public function processUrl(UrlInterface $url): ResultInterface;
+
+    public function canTakeScreenshot(): bool;
+
 }
