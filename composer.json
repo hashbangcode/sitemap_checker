@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "guzzlehttp/guzzle": "^7.5",
         "symfony/console": "^7.0",
         "symfony/http-kernel": "^7.0",
