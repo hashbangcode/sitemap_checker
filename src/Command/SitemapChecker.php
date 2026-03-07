@@ -209,11 +209,11 @@ class SitemapChecker extends Command
 
         $resultFile = $input->getOption('result-file');
 
-        if ($resultFile === NULL) {
+        if ($resultFile === null) {
           $resultRender = new PlainResultRender();
           $output->writeln($resultRender->render($results));
         }
-        else {
+        elseif (is_string($resultFile)) {
             $resultExt = strtolower(pathinfo($resultFile, PATHINFO_EXTENSION));
             $resultRender = match ($resultExt) {
               'csv' => new CsvResultRender(),
